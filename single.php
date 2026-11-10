@@ -2,16 +2,16 @@
 
 get_header(); ?>
 
-<div class="max-w-4xl mx-auto px-4 prose">
+<main>
   <?php if (have_posts()) {
-    while(have_posts()) {
+    while (have_posts()) {
       the_post(); ?>
-      <div>
+      <article>
         <h1><?php the_title(); ?></h1>
         <?php the_content(); ?>
-      </div>
+      </article>
     <?php }
   } ?>
-</div>
+</main>
 
 <?php get_footer();

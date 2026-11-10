@@ -1,10 +1,10 @@
-import Person from "./scripts/Person"
-import ExampleReactComponent from "./scripts/ExampleReactComponent"
 import React from "react"
 import ReactDOM from "react-dom/client"
 
-const person1 = new Person("Brad")
-if (document.querySelector("#render-react-example-here")) {
-  const root = ReactDOM.createRoot(document.querySelector("#render-react-example-here"))
-  root.render(<ExampleReactComponent />)
+// Monta un componente de React en el elemento con el id indicado, si existe en la página.
+function mount(id, Component) {
+  const el = document.getElementById(id)
+  if (el) ReactDOM.createRoot(el).render(<Component />)
 }
+
+// Componentes del tema (Navbar, Footer, ContactForm, Chatbot) se registran aquí.
