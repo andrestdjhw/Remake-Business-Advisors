@@ -1,2 +1,688 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* Paleta y tipografías extraídas del sitio actual (remakeadvisors.com). */
+@theme {
+  --font-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #fdefe6;
+  --color-brand-100: #fce0ce;
+  --color-brand-300: #f8a26f;
+  --color-brand-400: #f6833e;
+  --color-brand-500: #f4640d; /* naranja del logo: íconos, acentos y texto grande */
+  --color-brand-700: #c2410c; /* botones y texto pequeño sobre blanco (contraste AA) */
+  --color-brand-800: #a3360a;
+  --color-brand-900: #7a3206;
+
+  --color-navy-500: #004aad;
+  --color-navy-800: #00336f;
+  --color-navy-900: #002556;
+  --color-navy-950: #001a3d;
+
+  --color-cream: #fbf7f3;
+
+  /* Ancho máximo del contenido (max-w-site): 1440px con 40px de margen lateral en escritorio. */
+  --container-site: 90rem;
+  --color-ink: #1f2937;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 font-heading text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  /*
+   * CTA principal: degradado con borde degradado (padding-box / border-box) y sombra cálida,
+   * basado en el botón de Uiverse.io (virus231). Colores ajustados para contraste AA con texto blanco
+   * (mínimo 4.72:1); en hover pierde la sombra y "se hunde" 1px en lugar de bajar la opacidad.
+   */
+  .btn-primary {
+    @apply text-white focus-visible:outline-brand-700;
+    border: 2px solid transparent;
+    background:
+      linear-gradient(140.14deg, #cc460b 15.05%, #a8290f 114.99%) padding-box,
+      linear-gradient(142.51deg, #f6833e 8.65%, #8f2207 88.82%) border-box;
+    text-shadow: 1px 1px 1px rgb(0 0 0 / 0.25);
+    box-shadow: 8px 8px 20px 0 rgb(69 9 0 / 0.35);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 0 0 rgb(69 9 0 / 0);
+    transform: translateY(1px);
+  }
+  .btn-outline {
+    @apply border-2 border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white focus-visible:outline-navy-900;
+  }
+  /* Misma técnica en tonos navy para el CTA oscuro. */
+  .btn-navy {
+    @apply text-white focus-visible:outline-navy-900;
+    border: 2px solid transparent;
+    background:
+      linear-gradient(140.14deg, #0a3a7a 15.05%, #001a3d 114.99%) padding-box,
+      linear-gradient(142.51deg, #4f7fc4 8.65%, #00102a 88.82%) border-box;
+    text-shadow: 1px 1px 1px rgb(0 0 0 / 0.3);
+    box-shadow: 8px 8px 20px 0 rgb(0 26 61 / 0.35);
+  }
+  .btn-navy:hover {
+    box-shadow: 0 0 0 0 rgb(0 26 61 / 0);
+    transform: translateY(1px);
+  }
+  .eyebrow {
+    @apply font-heading text-xs font-semibold tracking-[0.25em] text-brand-700 uppercase;
+  }
+  /* Flecha de los botones: pequeño desplazamiento al pasar el mouse. */
+  .btn > svg:last-child:not(:first-child) {
+    @apply transition-transform duration-300;
+  }
+  .btn:hover > svg:last-child:not(:first-child) {
+    transform: translateX(3px);
+  }
+  .rba-placeholder {
+    background:
+      radial-gradient(circle at 75% 25%, var(--color-brand-100), transparent 55%),
+      linear-gradient(135deg, var(--color-brand-50), #fff 60%, var(--color-cream));
+  }
+}
+
+/* ---------- Carrusel de servicios (src/scripts/carousel.js) ----------
+   Scroll horizontal nativo con snap (táctil y trackpad), alineado al contenedor del sitio a la
+   izquierda y "sangrando" hasta el borde derecho de la pantalla. */
+.rba-carousel {
+  --gutter: 1rem;
+  --gap: 1.5rem;
+  --per-view: 1.15;
+  --content: calc(100vw - var(--gutter) * 2);
+}
+@media (min-width: 640px) {
+  .rba-carousel {
+    --gutter: 1.5rem;
+    --per-view: 2;
+  }
+}
+@media (min-width: 1024px) {
+  .rba-carousel {
+    --gutter: max(2.5rem, calc((100vw - 90rem) / 2 + 2.5rem));
+    --per-view: 3;
+    --content: min(calc(100vw - 5rem), 85rem);
+  }
+}
+@media (min-width: 1280px) {
+  .rba-carousel {
+    --per-view: 4;
+  }
+}
+.rba-carousel__track {
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  padding: 1rem var(--gutter) 1.5rem;
+  margin-block: -1rem -1.5rem; /* espacio para la sombra y el "lift" del hover sin recortarlos */
+  scrollbar-width: none;
+}
+.rba-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+.rba-carousel__track:focus-visible {
+  outline: 2px solid var(--color-brand-700);
+  outline-offset: -2px;
+}
+.rba-carousel__track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+.rba-carousel__item {
+  flex: none;
+  width: calc((var(--content) - var(--gap) * (var(--per-view) - 1)) / var(--per-view));
+  scroll-snap-align: start;
+}
+@media (max-width: 639px) {
+  .rba-carousel__item {
+    width: 82vw;
+  }
+}
+.rba-carousel__btn {
+  display: flex;
+  height: 3rem;
+  width: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 2px solid var(--color-navy-900);
+  color: var(--color-navy-900);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    opacity 0.25s ease;
+}
+.rba-carousel__btn:hover:not(:disabled) {
+  background: var(--color-navy-900);
+  color: #fff;
+}
+.rba-carousel__btn:focus-visible {
+  outline: 2px solid var(--color-brand-700);
+  outline-offset: 2px;
+}
+.rba-carousel__btn:disabled {
+  cursor: default;
+  opacity: 0.3;
+}
+
+/* ---------- Slideshow del hero (src/scripts/heroSlideshow.js) ----------
+   Crossfade + zoom lento (Ken Burns). El relleno del punto activo marca el tiempo:
+   al terminar su animación pasa a la siguiente foto, así pausar = pausar la animación. */
+[data-slideshow] {
+  --slide-ms: 6000ms;
+}
+.rba-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.rba-slide.is-active {
+  z-index: 1;
+  opacity: 1;
+}
+.rba-slide.is-active img,
+.rba-slide.is-leaving img {
+  animation: rba-kenburns calc(var(--slide-ms) + 1.2s) linear forwards;
+}
+@keyframes rba-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.rba-dot {
+  display: flex;
+  height: 1.75rem;
+  align-items: center;
+  padding: 0 0.3rem;
+  border-radius: 9999px;
+}
+.rba-dot:focus-visible,
+.rba-slide-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+.rba-dot__track {
+  position: relative;
+  display: block;
+  height: 0.4rem;
+  width: 0.4rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.55);
+  transition:
+    width 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 0.3s ease;
+}
+.rba-dot:hover .rba-dot__track {
+  background: rgb(255 255 255 / 0.85);
+}
+.rba-dot.is-active .rba-dot__track {
+  width: 2rem;
+  background: rgb(255 255 255 / 0.3);
+}
+.rba-dot__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.rba-dot.is-active .rba-dot__fill {
+  animation: rba-slide-progress var(--slide-ms) linear forwards;
+}
+@keyframes rba-slide-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+[data-slideshow][data-paused] .rba-dot__fill,
+[data-slideshow][data-paused] .rba-slide img {
+  animation-play-state: paused;
+}
+
+.rba-slide-toggle {
+  display: flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  margin-left: 0.15rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+.rba-slide-toggle:hover {
+  background: rgb(255 255 255 / 0.2);
+}
+.rba-slide-toggle__play,
+[data-slideshow][data-user-paused] .rba-slide-toggle__pause {
+  display: none;
+}
+[data-slideshow][data-user-paused] .rba-slide-toggle__play {
+  display: block;
+}
+
+/* Movimiento reducido: sin avance automático ni zoom; se navega con los puntos. */
+@media (prefers-reduced-motion: reduce) {
+  .rba-slide {
+    transition: none;
+  }
+  .rba-slide.is-active img,
+  .rba-slide.is-leaving img,
+  .rba-dot.is-active .rba-dot__fill {
+    animation: none;
+  }
+  .rba-dot.is-active .rba-dot__fill {
+    transform: scaleX(1);
+  }
+  .rba-slide-toggle {
+    display: none;
+  }
+}
+
+/* ---------- Sección de proceso: patrones de fondo y tarjetas apiladas ---------- */
+.rba-grid-pattern,
+.rba-dots-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.rba-grid-pattern {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 60% 55% at 85% 20%, #000 20%, transparent 75%);
+}
+.rba-dots-pattern {
+  background-image: radial-gradient(rgb(246 131 62 / 0.3) 1.2px, transparent 1.4px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 40% 35% at 8% 92%, #000 15%, transparent 70%);
+}
+
+/* Palabra tachada que se "dibuja" en el título */
+.rba-strike {
+  position: relative;
+  color: rgb(255 255 255 / 0.45);
+  white-space: nowrap;
+}
+.rba-strike::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  top: 55%;
+  height: 0.09em;
+  border-radius: 9999px;
+  background: var(--color-brand-400);
+  transform: rotate(-3deg);
+  transform-origin: left center;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.5s;
+}
+.rba-anim .js-split:not(.is-in) .rba-strike::after {
+  transform: rotate(-3deg) scaleX(0);
+  transition: none;
+}
+
+/* Subrayado tipo marcador */
+.rba-marker {
+  background: linear-gradient(transparent 62%, rgb(246 131 62 / 0.35) 62%) no-repeat;
+}
+
+.rba-stack-card {
+  position: sticky;
+  top: calc(var(--wp-admin--admin-bar--height, 0px) + 6rem + var(--i) * 1.125rem);
+  display: flex;
+  min-height: 15rem;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-radius: 1.375rem;
+  background: #efe8e0;
+  color: var(--color-navy-900);
+  box-shadow: 0 -20px 60px -30px rgb(0 0 0 / 0.6);
+  transform-origin: center top;
+  will-change: transform;
+}
+.rba-stack-card:nth-child(2) {
+  background: #fff;
+}
+.rba-stack-card:nth-child(3) {
+  background: var(--color-brand-100);
+}
+.rba-stack-card:nth-child(4) {
+  background: var(--color-brand-300);
+}
+.rba-stack-card em {
+  font-weight: 600;
+  color: var(--color-brand-800);
+}
+/* Sobre el naranja: texto e itálica más oscuros para mantener contraste AA */
+.rba-stack-card:nth-child(4) p {
+  color: var(--color-ink);
+}
+.rba-stack-card:nth-child(4) em,
+.rba-stack-card:nth-child(4) .rba-stack-card__art {
+  color: var(--color-navy-900);
+}
+.rba-stack-card__num {
+  font-family: var(--font-heading);
+  font-size: clamp(3.25rem, 7vw, 5.75rem);
+  font-weight: 800;
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-navy-900);
+}
+.rba-stack-card__art {
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: none;
+  color: var(--color-brand-700);
+}
+@media (min-width: 1024px) {
+  .rba-stack-card {
+    top: calc(var(--wp-admin--admin-bar--height, 0px) + 7rem + var(--i) * 1.625rem);
+    min-height: 19rem;
+    padding: 2.5rem;
+    border-radius: 1.75rem;
+  }
+  .rba-stack-card__art {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
+/* Íconos que se dibujan al entrar la tarjeta */
+.rba-draw svg {
+  stroke-width: 1.4;
+}
+.rba-draw svg > * {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.25s;
+}
+.rba-anim .js-stack-card:not(.is-in) .rba-draw svg > * {
+  stroke-dashoffset: 1;
+  transition: none;
+}
+
+/* ---------- Preguntas frecuentes (acordeón nativo <details>) ---------- */
+:root {
+  interpolate-size: allow-keywords; /* permite animar la altura hasta "auto" (Chrome/Edge) */
+}
+.rba-faq__item {
+  border-bottom: 1px solid var(--color-gray-200);
+}
+.rba-faq__item:first-child {
+  border-top: 1px solid var(--color-gray-200);
+}
+.rba-faq__q {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.4rem 0.25rem;
+  list-style: none;
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-navy-900);
+  transition: color 0.2s ease;
+}
+.rba-faq__q::-webkit-details-marker {
+  display: none;
+}
+.rba-faq__q:hover {
+  color: var(--color-brand-700);
+}
+.rba-faq__q:focus-visible {
+  outline: 2px solid var(--color-brand-700);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+.rba-faq__num {
+  min-width: 1.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-brand-700);
+}
+.rba-faq__icon {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--color-brand-50);
+  color: var(--color-brand-700);
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+.rba-faq__item[open] .rba-faq__icon {
+  transform: rotate(45deg);
+  background: var(--color-brand-700);
+  color: #fff;
+}
+.rba-faq__a {
+  padding: 0 3.5rem 1.5rem 3.25rem;
+  color: rgb(31 41 55 / 0.78);
+  line-height: 1.7;
+}
+.rba-faq__item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+    content-visibility 0.4s allow-discrete;
+}
+.rba-faq__item[open]::details-content {
+  block-size: auto;
+}
+@media (max-width: 639px) {
+  .rba-faq__num {
+    display: none;
+  }
+  .rba-faq__a {
+    padding: 0 0.25rem 1.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rba-faq__item::details-content,
+  .rba-faq__icon {
+    transition: none;
+  }
+}
+
+/* ---------- Retratos "glass" (hover estilo menú de canales de Wii) ----------
+   Al pasar el mouse: crece con rebote, brillo vidrioso, halo de luz y un destello que cruza la foto. */
+.rba-glass {
+  position: relative;
+  margin: 0;
+}
+.rba-glass__orb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--color-cream);
+  box-shadow:
+    0 0 0 4px #fff,
+    0 10px 20px -6px rgb(0 37 86 / 0.25);
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.4s ease;
+}
+/* Capa de vidrio: reflejo superior + volumen interior */
+.rba-glass__orb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgb(255 255 255 / 0.75) 0%, rgb(255 255 255 / 0.2) 38%, transparent 40%),
+    linear-gradient(to top, rgb(0 37 86 / 0.18), transparent 45%);
+  box-shadow:
+    inset 0 2px 6px rgb(255 255 255 / 0.7),
+    inset 0 -10px 18px rgb(0 37 86 / 0.18);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+/* Destello diagonal que cruza la foto */
+.rba-glass__shine {
+  position: absolute;
+  inset: -20%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgb(255 255 255 / 0.65) 48%, rgb(255 255 255 / 0.15) 54%, transparent 62%);
+  transform: translateX(-110%);
+}
+.rba-glass__label {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  z-index: 3;
+  max-width: 120%;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.55);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  box-shadow: 0 6px 16px -6px rgb(0 37 86 / 0.35);
+  color: var(--color-navy-900);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px) scale(0.92);
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (hover: hover) {
+  .rba-glass:hover .rba-glass__orb {
+    transform: scale(1.1);
+    box-shadow:
+      0 0 0 4px #fff,
+      0 0 0 7px rgb(246 131 62 / 0.55),
+      0 0 32px 8px rgb(246 131 62 / 0.35),
+      0 18px 30px -8px rgb(0 37 86 / 0.35);
+  }
+  .rba-glass:hover .rba-glass__orb::before {
+    opacity: 1;
+  }
+  .rba-glass:hover .rba-glass__shine {
+    animation: rba-glass-shine 0.9s ease-out;
+  }
+  .rba-glass:hover .rba-glass__label {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes rba-glass-shine {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(110%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rba-glass__orb,
+  .rba-glass__label {
+    transition: opacity 0.2s ease;
+  }
+  .rba-glass:hover .rba-glass__orb {
+    transform: none;
+  }
+  .rba-glass:hover .rba-glass__shine {
+    animation: none;
+  }
+}
+
+/* ---------- Transiciones (src/scripts/animations.js) ----------
+   Estados iniciales solo cuando <html> tiene "rba-anim"; sin JS o con movimiento reducido todo es visible. */
+.rba-anim [data-reveal],
+.rba-anim [data-hero-in] {
+  opacity: 0;
+}
+.rba-anim .js-split:not(.is-split) {
+  visibility: hidden;
+}
+.rba-anim .js-img-reveal {
+  clip-path: inset(100% 0 0 0);
+}
+.rba-anim [data-line] {
+  transform: scaleX(0);
+}
+
+/* Máscara por palabra para los títulos divididos. */
+.rba-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.08em 0.12em;
+  margin: 0 -0.08em -0.12em;
+}
+.rba-w__i {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Lenis (smooth scroll) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
