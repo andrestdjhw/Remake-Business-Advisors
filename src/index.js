@@ -1,6 +1,8 @@
 import { createRoot } from "react-dom/client"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
+import ContactForm from "./components/ContactForm"
+import CookieConsent from "./components/CookieConsent"
 import initAnimations from "./scripts/animations"
 import initHeroSlideshows from "./scripts/heroSlideshow"
 import initCarousels from "./scripts/carousel"
@@ -16,6 +18,22 @@ function mount(id, Component) {
 
 mount("rba-navbar", Navbar)
 mount("rba-footer", Footer)
+
+const consentEl = document.getElementById("rba-cookie-consent")
+if (consentEl) {
+  const privacy = (data.legal || []).find(l => /privacy/i.test(l.label))
+  createRoot(consentEl).render(<CookieConsent privacyUrl={privacy?.url} />)
+}
+
+// Formulario de contacto: sus props vienen en data-props (page-contact-us.php).
+const contactEl = document.getElementById("rba-contact-form")
+if (contactEl) {
+  let props = {}
+  try {
+    props = JSON.parse(contactEl.dataset.props || "{}")
+  } catch (e) {}
+  createRoot(contactEl).render(<ContactForm props={props} />)
+}
 
 initAnimations()
 initHeroSlideshows()

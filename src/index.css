@@ -90,6 +90,57 @@
     box-shadow: 0 0 0 0 rgb(0 26 61 / 0);
     transform: translateY(1px);
   }
+  /*
+   * Íconos sociales del footer: mismo tratamiento que .btn-primary (degradado, borde degradado y
+   * sombra), visible en hover. El degradado vive en ::before para poder animar su opacidad.
+   */
+  .rba-social {
+    position: relative;
+    isolation: isolate;
+    border: 2px solid transparent;
+    background: rgb(255 255 255 / 0.1) border-box;
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+  .rba-social::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    border: 2px solid transparent;
+    border-radius: inherit;
+    background:
+      linear-gradient(140.14deg, #cc460b 15.05%, #a8290f 114.99%) padding-box,
+      linear-gradient(142.51deg, #f6833e 8.65%, #8f2207 88.82%) border-box;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .rba-social svg {
+    transition: filter 0.3s ease;
+  }
+  .rba-social:hover,
+  .rba-social:focus-visible {
+    box-shadow: 6px 6px 16px 0 rgb(0 0 0 / 0.35);
+    transform: translateY(-1px);
+  }
+  .rba-social:hover::before,
+  .rba-social:focus-visible::before {
+    opacity: 1;
+  }
+  .rba-social:hover svg,
+  .rba-social:focus-visible svg {
+    filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 0.25));
+  }
+  .rba-social:active {
+    box-shadow: none;
+    transform: translateY(1px);
+  }
+  .rba-social:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
   .eyebrow {
     @apply font-heading text-xs font-semibold tracking-[0.25em] text-brand-700 uppercase;
   }

@@ -135,26 +135,7 @@ $process = array(
         <?php $services = rba_services(); ?>
         <?php foreach ($services as $i => $service) : ?>
           <li class="rba-carousel__item" data-reveal aria-roledescription="slide" aria-label="<?php echo esc_attr(($i + 1) . ' of ' . count($services)); ?>">
-            <article class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-xl">
-              <div class="relative aspect-[4/3] overflow-hidden bg-cream">
-                <?php echo rba_image('rba_service_img_' . $service['slug'], 'h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105', 'medium_large', array('loading' => 'lazy', 'sizes' => '(min-width: 1280px) 340px, (min-width: 640px) 45vw, 85vw', 'draggable' => 'false')); ?>
-                <span class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-navy-950/45 to-transparent" aria-hidden="true"></span>
-                <span class="absolute top-4 left-4 rounded-full bg-white/80 px-3 py-1 font-heading text-xs font-semibold text-navy-900 ring-1 ring-white/70 backdrop-blur-md">
-                  <?php echo $service['group'] === 'training' ? 'Training' : 'Consulting'; ?>
-                </span>
-              </div>
-              <div class="relative flex flex-1 flex-col p-6 pt-9">
-                <span class="absolute -top-6 left-6 flex h-12 w-12 items-center justify-center rounded-xl bg-white text-brand-500 shadow-lg ring-1 ring-brand-100 transition-colors duration-300 group-hover:bg-brand-500 group-hover:text-white">
-                  <?php echo rba_icon($service['icon'], 'h-6 w-6'); ?>
-                </span>
-                <h3 class="text-lg leading-snug font-semibold text-navy-900"><?php echo esc_html($service['title']); ?></h3>
-                <p class="mt-2 flex-1 text-sm leading-relaxed text-ink/70"><?php echo esc_html($service['summary']); ?></p>
-                <a href="<?php echo esc_url(rba_service_url($service['slug'])); ?>" class="mt-5 inline-flex items-center gap-2 font-heading text-sm font-semibold text-brand-700 after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none group-focus-within:after:ring-2 group-focus-within:after:ring-brand-500" draggable="false">
-                  Explore service<span class="sr-only">: <?php echo esc_html($service['title']); ?></span>
-                  <?php echo rba_icon('arrowRight', 'h-4 w-4 transition group-hover:translate-x-1'); ?>
-                </a>
-              </div>
-            </article>
+            <?php get_template_part('template-parts/service-card', null, array('service' => $service)); ?>
           </li>
         <?php endforeach; ?>
       </ul>
@@ -282,99 +263,10 @@ $process = array(
     </div>
   </section>
 
-  <!-- ===================== PREGUNTAS FRECUENTES ===================== -->
-  <?php $company = rba_company(); ?>
-  <section class="bg-white py-20 lg:py-28" aria-labelledby="faq-title">
-    <div class="mx-auto grid max-w-site gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-10">
-      <div class="lg:col-span-4">
-        <div class="lg:sticky lg:top-[calc(var(--wp-admin--admin-bar--height,0px)_+_7rem)]">
-          <p class="eyebrow" data-reveal>FAQs</p>
-          <h2 id="faq-title" class="js-split mt-3 text-3xl font-bold text-navy-900 sm:text-4xl">Frequently Asked Questions</h2>
-          <p class="mt-4 text-lg leading-relaxed text-ink/75" data-reveal>Clear answers about how we work, who we help, and how to get started.</p>
-
-          <div class="mt-8 rounded-2xl bg-cream p-6 ring-1 ring-brand-100" data-reveal>
-            <p class="font-heading text-base font-semibold text-navy-900">Still have questions?</p>
-            <p class="mt-1 text-sm leading-relaxed text-ink/70">Talk with our team and we&rsquo;ll help you find the right next step for your business.</p>
-            <div class="mt-5 flex flex-wrap gap-3">
-              <a href="<?php echo esc_url($contact_url); ?>" class="btn btn-primary px-5">Contact Us</a>
-              <a href="tel:<?php echo esc_attr($company['phone_e164']); ?>" class="btn btn-outline px-5">
-                <?php echo rba_icon('phone', 'h-4 w-4'); ?>
-                <?php echo esc_html($company['phone']); ?>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rba-faq lg:col-span-8">
-        <?php foreach (rba_home_faqs() as $i => $faq) : ?>
-          <details class="rba-faq__item" name="rba-faq" data-reveal <?php echo $i === 0 ? 'open' : ''; ?>>
-            <summary class="rba-faq__q">
-              <span class="rba-faq__num" aria-hidden="true"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span>
-              <span class="flex-1"><?php echo esc_html($faq['q']); ?></span>
-              <span class="rba-faq__icon" aria-hidden="true"><?php echo rba_icon('plus', 'h-5 w-5'); ?></span>
-            </summary>
-            <div class="rba-faq__a">
-              <p><?php echo esc_html($faq['a']); ?></p>
-            </div>
-          </details>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== SEDE / MAPA ===================== -->
-  <section class="bg-cream py-20 lg:py-24" aria-labelledby="hq-title">
-    <div class="mx-auto max-w-site px-4 sm:px-6 lg:px-10">
-      <div class="relative overflow-hidden rounded-[1.75rem] shadow-xl ring-1 ring-black/5" data-reveal>
-        <iframe
-          class="block h-[420px] w-full grayscale-[35%] lg:h-[520px]"
-          src="<?php echo esc_url(rba_maps_embed_url()); ?>"
-          title="Map showing Remake Business Advisors headquarters in Irvine, California"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen></iframe>
-
-        <div class="relative bg-white p-6 sm:p-8 lg:absolute lg:top-8 lg:right-8 lg:w-[24rem] lg:rounded-2xl lg:bg-white/85 lg:shadow-2xl lg:ring-1 lg:ring-white/70 lg:backdrop-blur-xl">
-          <p class="eyebrow">Our Headquarters</p>
-          <h2 id="hq-title" class="mt-2 text-2xl font-bold text-navy-900">Visit Us in Irvine, California</h2>
-          <address class="mt-5 space-y-4 not-italic">
-            <p class="flex gap-3 text-ink/80">
-              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-500"><?php echo rba_icon('mapPin', 'h-5 w-5'); ?></span>
-              <span><?php echo esc_html($company['street']); ?><br><?php echo esc_html($company['locality'] . ', ' . $company['region'] . ' ' . $company['postal']); ?></span>
-            </p>
-            <p class="flex items-center gap-3">
-              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-500"><?php echo rba_icon('phone', 'h-5 w-5'); ?></span>
-              <a href="tel:<?php echo esc_attr($company['phone_e164']); ?>" class="font-medium text-navy-900 hover:text-brand-700"><?php echo esc_html($company['phone']); ?></a>
-            </p>
-          </address>
-          <p class="mt-5 text-sm text-ink/70">Sessions are also available by phone and Zoom.</p>
-          <a href="<?php echo esc_url(rba_maps_directions_url()); ?>" target="_blank" rel="noopener noreferrer" class="btn btn-navy mt-6 w-full">
-            <?php echo rba_icon('navigation', 'h-4 w-4'); ?>
-            Get Directions
-            <span class="sr-only">(opens Google Maps in a new tab)</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== CTA FINAL ===================== -->
-  <section class="px-4 py-20 sm:px-6 lg:px-10 lg:py-24" aria-labelledby="cta-title">
-    <div data-reveal class="mx-auto flex max-w-site flex-col items-start gap-6 rounded-2xl bg-gradient-to-r from-brand-50 via-brand-100 to-brand-50 p-8 ring-1 ring-brand-100 sm:p-10 md:flex-row md:items-center">
-      <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white text-brand-500 shadow-sm">
-        <?php echo rba_icon('calendar', 'h-7 w-7'); ?>
-      </span>
-      <div class="flex-1">
-        <h2 id="cta-title" class="text-2xl font-bold text-navy-900">Let&rsquo;s Talk About Your Business</h2>
-        <p class="mt-1 text-ink/75">Schedule a consultation and discover how we can help you reimagine and grow your business.</p>
-      </div>
-      <a href="<?php echo esc_url($contact_url); ?>" class="btn btn-navy">
-        Book a Consultation
-        <?php echo rba_icon('arrowRight', 'h-4 w-4'); ?>
-      </a>
-    </div>
-  </section>
+  <!-- ===================== PREGUNTAS FRECUENTES / SEDE / CTA (template-parts) ===================== -->
+  <?php get_template_part('template-parts/faq'); ?>
+  <?php get_template_part('template-parts/hq-map'); ?>
+  <?php get_template_part('template-parts/cta-band'); ?>
 
 </main>
 

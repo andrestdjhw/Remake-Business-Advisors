@@ -66,7 +66,7 @@ export default function Footer({ data }) {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-brand-500"
+                    className="rba-social flex h-10 w-10 items-center justify-center rounded-lg text-white"
                   >
                     <Icon name={social.network} className="h-5 w-5" />
                     <span className="sr-only">{`${social.label} (opens in a new tab)`}</span>
@@ -81,17 +81,21 @@ export default function Footer({ data }) {
       <div className="relative border-t border-white/10">
         <div className="mx-auto flex max-w-site flex-col gap-3 px-4 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
           <p>{`© ${year} ${siteName}. All rights reserved.`}</p>
-          {legal.length > 0 && (
-            <ul className="flex gap-5">
-              {legal.map(link => (
-                <li key={link.url}>
-                  <a href={link.url} className="hover:text-white">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {legal.map(link => (
+              <li key={link.url}>
+                <a href={link.url} className="hover:text-white">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              {/* Reabre el aviso de cookies en preferencias (CookieConsent.js) */}
+              <button type="button" className="hover:text-white" onClick={() => window.dispatchEvent(new Event("rba:open-consent"))}>
+                Cookie Settings
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>

@@ -5,6 +5,9 @@ require_once get_theme_file_path('/inc/icons.php');
 require_once get_theme_file_path('/inc/customizer.php');
 require_once get_theme_file_path('/inc/faqs.php');
 require_once get_theme_file_path('/inc/content.php');
+require_once get_theme_file_path('/inc/pages-content.php');
+require_once get_theme_file_path('/inc/routing.php');
+require_once get_theme_file_path('/inc/contact-endpoint.php');
 
 function rba_load_assets() {
   $asset = include get_theme_file_path('/build/index.asset.php');
@@ -37,6 +40,20 @@ function rba_animation_flag() {
 }
 
 add_action('wp_head', 'rba_animation_flag', 1);
+
+/*
+ * Google Consent Mode v2: todo "denied" por defecto antes de cualquier script de analítica/marketing.
+ * Si el visitante ya eligió (localStorage "rba-consent", ver src/components/CookieConsent.js), se aplica de inmediato.
+ * Cualquier etiqueta de GA4 / Tag Manager debe cargarse DESPUÉS de este bloque.
+ */
+function rba_consent_defaults() {
+  echo "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}"
+    . "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted',wait_for_update:500});"
+    . "try{var c=JSON.parse(localStorage.getItem('rba-consent')||'null');if(c&&c.v===1){gtag('consent','update',{analytics_storage:c.analytics?'granted':'denied',ad_storage:c.marketing?'granted':'denied',ad_user_data:c.marketing?'granted':'denied',ad_personalization:c.marketing?'granted':'denied'});}}catch(e){}"
+    . "</script>\n";
+}
+
+add_action('wp_head', 'rba_consent_defaults', 0);
 
 function rba_add_support() {
   add_theme_support('title-tag');
