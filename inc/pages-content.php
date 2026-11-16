@@ -3,9 +3,10 @@
  * Contenido de las páginas internas (About, Services, landings de servicio, Team y Contact).
  *
  * Fuente: sitio actual remakeadvisors.com (consultado 9–11 nov 2026) y brief de rediseño.
+ * 11-nov-2026: Business Coaching Academy ya no existe; se retiró de todo el sitio (sus URLs redirigen con 301 al home).
  * PENDIENTE DE VALIDAR CON REMAKE antes de publicar (brief §03, §6.2–6.6, §12):
  * - Se omitieron afirmaciones sin evidencia: "50+ years", "15,000 entrepreneurs trained", "CPAs / enrolled
- *   agents / corporate tax specialists", "all 50 states", certificación BPPE, precios y fechas del BCA,
+ *   agents / corporate tax specialists", "all 50 states" y certificaciones sin verificar,
  *   y duraciones (sesiones de 1h/2h, planeación de 5–6 h).
  * - Cargos del equipo: copiados del sitio actual; confirmar con la lista maestra.
  * - Opciones del formulario: rangos de ventas y "antigüedad" nuevos (el sitio actual tenía huecos).
@@ -145,33 +146,7 @@ function rba_service_details() {
         array('q' => 'Can the course be adapted to my company?', 'a' => 'Yes. The course is customized to your company and the needs of your team.'),
         array('q' => 'How is the training delivered?', 'a' => 'The training is available online. Contact us to discuss your team, schedule, and the best format for your company.'),
       ),
-      'related' => array('business-coaching-academy', 'strategic-planning', 'business-diagnosis'),
-    ),
-
-    'business-coaching-academy' => array(
-      'headline' => 'A practical program to structure, organize, and grow your business.',
-      'problem' => 'Many entrepreneurs build their business on effort and experience, but without the structure, processes, and financial knowledge that a growing company needs.',
-      'solution' => 'The Business Coaching Academy is a training program with a practical approach. Across seven modules you learn how to structure and optimize the key areas of your company, from organization and human resources to processes, marketing, and finances.',
-      'for' => array(
-        'Hispanic entrepreneurs at any stage, whether they are starting or already established.',
-        'Business owners who want to go from running a business empirically to leading it with structure.',
-        'Leaders who want practical tools they can apply right away.',
-      ),
-      'modules' => array(
-        array('title' => 'From merchant to entrepreneur', 'items' => array('The areas that make up a company', 'Discovering your "Big Why" as an entrepreneur', 'From an empirical business to a structured company', 'The pillars of a successful entrepreneur')),
-        array('title' => 'Organizational design', 'items' => array('The roles of a CEO, CFO, COO, and CMO', 'Efficient organizational design', 'Manual of functions, responsibilities, and obligations by department')),
-        array('title' => 'People and compliance', 'items' => array('Labor compliance', 'Hiring processes and job interviews', 'Employee handbook, safety, and onboarding', 'Commercial insurance, workers\' compensation, and general liability')),
-        array('title' => 'SWOT for your business', 'items' => array('Strengths, weaknesses, opportunities, and threats', 'Applying and implementing SWOT in your company')),
-        array('title' => 'Essential processes', 'items' => array('Administration, sales and metrics, production, and logistics', 'Staff training', 'Systematization and optimization')),
-        array('title' => 'Products, pricing, and marketing', 'items' => array('Validating your products and services', 'Pricing, premium products, and hook products', 'The AIDA formula and an effective marketing plan')),
-        array('title' => 'Finances for a profitable company', 'items' => array('The "Profit First" formula', 'Profit and loss report, balance sheet, and general ledger', 'From entrepreneur to investor')),
-      ),
-      'faqs' => array(
-        array('q' => 'Who is the Business Coaching Academy for?', 'a' => 'For entrepreneurs and business owners, especially in the Hispanic community, who want to structure and grow their companies, whether they are just starting or already established.'),
-        array('q' => 'When does the next group start, and how much does it cost?', 'a' => 'Program dates, schedules, and enrollment options are updated for each group. Request information and our team will share the current details with you.'),
-        array('q' => 'Is the program available in Spanish?', 'a' => 'Yes. Our training programs are offered in Spanish.'),
-      ),
-      'related' => array('course-for-managers-and-supervisors', 'business-diagnosis', 'personalized-advisory-sessions'),
+      'related' => array('strategic-planning', 'business-diagnosis', 'personalized-advisory-sessions'),
     ),
   );
 }
@@ -190,8 +165,8 @@ function rba_service_by_slug($slug) {
 function rba_team_members() {
   // photo = ID en la biblioteca de medios (importados del sitio actual).
   return array(
-    array('slug' => 'karina-nava', 'name' => 'Karina Nava', 'role' => 'Enrolled Agent · Founder', 'photo' => 13),
-    array('slug' => 'laura-elena-martinez', 'name' => 'Laura Elena Martínez', 'role' => 'Business Advisor · Co-founder', 'photo' => 11),
+    array('slug' => 'karina-nava', 'name' => 'Karina Nava', 'partner' => true, 'role' => 'Enrolled Agent · [Founder title pending confirmation]', 'photo' => 13),
+    array('slug' => 'laura-elena-martinez', 'name' => 'Laura Elena Martínez', 'partner' => true, 'role' => 'Business Advisor · [Co-founder title pending confirmation]', 'photo' => 11),
     array('slug' => 'sergio-garcia-rivas', 'name' => 'Sergio Garcia Rivas', 'role' => 'General Manager', 'photo' => 18),
     array('slug' => 'miguel-gomez', 'name' => 'Miguel Gómez', 'role' => 'CFP®, EA', 'photo' => 17),
     array('slug' => 'manuel-martinez', 'name' => 'Manuel Martínez', 'role' => 'Junior Business Consultant', 'photo' => 12),
@@ -242,5 +217,36 @@ function rba_contact_form_options() {
     ),
     'age' => array('Not registered yet', 'Less than 1 year', '1 to 3 years', '3 to 5 years', 'More than 5 years'),
     'services' => array_map(function ($s) { return array('value' => $s['slug'], 'label' => $s['title']); }, rba_services()),
+  );
+}
+
+/* ---------- Home: situaciones frecuentes → servicio que las atiende ---------- */
+function rba_challenges() {
+  return array(
+    array('service' => 'business-diagnosis', 'text' => 'I know something is holding my business back, but I can’t pinpoint what.'),
+    array('service' => 'financial-diagnosis', 'text' => 'Sales are coming in, but I’m not sure we’re actually profitable.'),
+    array('service' => 'formation-of-corporate-entities', 'text' => 'I’m starting or restructuring, and I don’t know which entity is right for me.'),
+    array('service' => 'strategic-planning', 'text' => 'We’re busy every day, but there’s no clear plan for where we’re going.'),
+    array('service' => 'personalized-advisory-sessions', 'text' => 'I have a specific decision to make and want an expert to think it through with me.'),
+    array('service' => 'course-for-managers-and-supervisors', 'text' => 'My supervisors work hard, but they need tools to lead the team better.'),
+  );
+}
+
+/*
+ * Historias de clientes y reseñas. PENDIENTE (correo del 11-nov-2026): Laura enviará 2–3 casos y reseñas reales.
+ * Mientras esté vacío se muestran espacios marcados; no agregar textos de ejemplo.
+ * Formato: array('quote' => '', 'name' => '', 'business' => '', 'service' => 'slug opcional')
+ */
+function rba_client_stories() {
+  return array();
+}
+
+/* ---------- Contacto: qué pasa después de escribirnos ---------- */
+function rba_next_steps() {
+  return array(
+    array('icon' => 'mail', 'title' => 'We review your request', 'text' => 'Our team reads your message and the details about your business before reaching out.'),
+    array('icon' => 'phone', 'title' => 'We contact you', 'text' => 'We call or email you to understand what you need and confirm the best way to meet.'),
+    array('icon' => 'calendar', 'title' => 'Your first consultation', 'text' => 'We meet by phone, on Zoom, or in person in Irvine, in English or Spanish.'),
+    array('icon' => 'map', 'title' => 'A clear next step', 'text' => 'You leave with a recommendation on where to start and which service fits your business.'),
   );
 }

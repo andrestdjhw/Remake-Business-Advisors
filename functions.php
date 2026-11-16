@@ -8,6 +8,9 @@ require_once get_theme_file_path('/inc/content.php');
 require_once get_theme_file_path('/inc/pages-content.php');
 require_once get_theme_file_path('/inc/routing.php');
 require_once get_theme_file_path('/inc/contact-endpoint.php');
+require_once get_theme_file_path('/inc/seo.php');
+require_once get_theme_file_path('/inc/tracking.php');
+require_once get_theme_file_path('/inc/backups.php');
 
 function rba_load_assets() {
   $asset = include get_theme_file_path('/build/index.asset.php');
@@ -64,32 +67,3 @@ function rba_add_support() {
 
 add_action('after_setup_theme', 'rba_add_support');
 
-/* Datos estructurados de la organización en la página de inicio. */
-function rba_organization_schema() {
-  if (!is_front_page()) return;
-
-  $schema = array(
-    '@context' => 'https://schema.org',
-    '@type' => 'Organization',
-    'name' => 'Remake Business Advisors',
-    'url' => home_url('/'),
-    'logo' => rba_logo_url(),
-    'description' => 'Business consulting and education that helps entrepreneurs and business owners, especially in the Hispanic community, diagnose, structure, and grow their companies.',
-    'telephone' => rba_company()['phone_e164'],
-    'address' => array(
-      '@type' => 'PostalAddress',
-      'streetAddress' => rba_company()['street'],
-      'addressLocality' => rba_company()['locality'],
-      'addressRegion' => rba_company()['region'],
-      'postalCode' => rba_company()['postal'],
-      'addressCountry' => rba_company()['country'],
-    ),
-  );
-
-  $same_as = array_values(array_filter(array_column(rba_social_links(), 'url')));
-  if ($same_as) $schema['sameAs'] = $same_as;
-
-  echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
-}
-
-add_action('wp_head', 'rba_organization_schema');

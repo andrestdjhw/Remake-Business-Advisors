@@ -52,7 +52,6 @@ $form_props = array(
         </div>
 
         <div class="relative isolate overflow-hidden rounded-[1.75rem] bg-navy-900 p-8 text-white" data-reveal>
-          <div class="rba-grid-pattern" aria-hidden="true"></div>
           <h2 class="text-xl font-bold">How we can meet</h2>
           <ul class="mt-5 space-y-3 text-white/80">
             <li class="flex gap-3"><?php echo rba_icon('check', 'mt-0.5 h-5 w-5 shrink-0 text-brand-400'); ?>By phone</li>
@@ -74,6 +73,7 @@ $form_props = array(
     </div>
   </section>
 
+  <?php get_template_part('template-parts/next-steps'); ?>
   <?php get_template_part('template-parts/faq', null, array('bg' => 'bg-cream')); ?>
   <?php get_template_part('template-parts/hq-map'); ?>
 </main>

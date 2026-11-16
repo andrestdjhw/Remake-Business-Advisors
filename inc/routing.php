@@ -25,23 +25,59 @@ function rba_service_template($template) {
 
 add_filter('template_include', 'rba_service_template');
 
-/* Redirecciones 301: /service/ → /services/ y perfiles antiguos /team/{slug}/ → /our-team/#{slug}. */
+/* Ruta pedida, relativa a la instalación y sin barras en los extremos (p. ej. "service/business-diagnosis"). */
+function rba_request_path() {
+  $path = trim((string) wp_parse_url(isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '', PHP_URL_PATH), '/');
+  $home_path = trim((string) wp_parse_url(home_url(), PHP_URL_PATH), '/');
+  if ($home_path !== '' && strpos($path, $home_path . '/') === 0) $path = substr($path, strlen($home_path) + 1);
+  return strtolower($path);
+}
+
+/*
+ * Mapa 301 desde las URLs de remakeadvisors.com (sitemap del sitio actual, 13-nov-2026) y duplicados internos.
+ * Se mantienen sin cambio: /, /about-us/, /services/, /service/{6 servicios}/, /our-team/, /contact-us/,
+ * /privacy-policy/, /terms-and-conditions/. El detalle por URL está en docs/301-redirects.csv.
+ * PENDIENTE (brief §12): decidir con Remake el destino de eventos pasados, webinars y masterclass; hoy van al home.
+ */
+function rba_redirect_target($path) {
+  $service_slugs = wp_list_pluck(rba_services(), 'slug');
+  $team_slugs = wp_list_pluck(rba_team_members(), 'slug');
+
+  // Una sola estructura de servicios: /services/ (hub) y /service/{slug}/ (landings).
+  if ($path === 'service') return '/services/';
+  if (in_array($path, $service_slugs, true)) return '/service/' . $path . '/';
+
+  // Business Coaching Academy ya no existe (revisión 11-nov-2026): al home.
+  if (preg_match('#^(service/)?business-coaching-academy(/.*)?$#', $path)) return '/';
+
+  // Perfiles antiguos del equipo (incluye subpáginas como /team/miguel-gomez/pago-exitoso/).
+  if (preg_match('#^team(/([a-z0-9-]+))?(/.*)?$#', $path, $m)) {
+    $slug = isset($m[2]) ? $m[2] : '';
+    return '/our-team/' . (in_array($slug, $team_slugs, true) ? '#' . $slug : '');
+  }
+
+  // Archivos de autor (exponen el usuario de WordPress) y taxonomías antiguas.
+  if (preg_match('#^(author|active|event-type|category|tag)(/.*)?$#', $path)) return '/';
+
+  // Eventos pasados y páginas sin equivalente en el sitio nuevo.
+  if (preg_match('#^company-event(/.*)?$#', $path)) return '/';
+  if (in_array($path, array('design-guide', 'made-by', 'maintenance', 'sitemap', 'webinars', 'masterclass', 'our-sister-businesses', 'events'), true)) return '/';
+
+  return '';
+}
+
 function rba_legacy_redirects() {
-  if (is_page('service')) {
-    wp_safe_redirect(home_url('/services/'), 301);
+  // ?author=N también revela el usuario: al home.
+  if (isset($_GET['author']) || is_author()) {
+    wp_safe_redirect(home_url('/'), 301);
     exit;
   }
 
   // Se revisa la ruta directamente (no solo en 404): WordPress resuelve /team/laura-elena-martinez/
   // como la página de adjunto de la foto con ese nombre y la mandaría al archivo de imagen.
-  $path = trim((string) wp_parse_url(isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '', PHP_URL_PATH), '/');
-  $home_path = trim((string) wp_parse_url(home_url(), PHP_URL_PATH), '/');
-  if ($home_path !== '' && strpos($path, $home_path . '/') === 0) $path = substr($path, strlen($home_path) + 1);
-
-  if (preg_match('#^team/([a-z0-9-]+)$#', $path, $m)) {
-    $slugs = wp_list_pluck(rba_team_members(), 'slug');
-    $target = home_url('/our-team/') . (in_array($m[1], $slugs, true) ? '#' . $m[1] : '');
-    wp_safe_redirect($target, 301);
+  $target = rba_redirect_target(rba_request_path());
+  if ($target !== '') {
+    wp_safe_redirect(home_url($target), 301);
     exit;
   }
 }

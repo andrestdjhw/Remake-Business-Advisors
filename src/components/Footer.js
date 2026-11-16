@@ -28,13 +28,12 @@ function FooterLinks({ title, links }) {
 }
 
 export default function Footer({ data }) {
-  const { homeUrl, logoUrl, siteName, nav = [], services = [], cta, socials = [], legal = [] } = data
+  const { homeUrl, logoUrl, siteName, nav = [], services = [], cta, socials = [], legal = [], sisterSites = [] } = data
   const quickLinks = nav.map(({ label, url, external }) => ({ label, url, external }))
   const year = new Date().getFullYear()
 
   return (
     <footer className="relative overflow-hidden bg-navy-950 text-white">
-      <div className="pointer-events-none absolute -bottom-40 -left-24 h-80 w-80 rounded-full border-[2rem] border-brand-500/15" aria-hidden="true" />
 
       <div className="relative mx-auto grid max-w-site gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.4fr_1fr_1.3fr_1.2fr] lg:px-10">
         <div>
@@ -78,8 +77,27 @@ export default function Footer({ data }) {
         </div>
       </div>
 
+      {sisterSites.length > 0 && (
+        <div className="relative border-t border-white/10">
+          <div className="mx-auto flex max-w-site flex-col gap-2 px-4 py-5 text-[13px] text-white/70 sm:flex-row sm:items-center sm:gap-5 sm:px-6 lg:px-10">
+            <p className="font-heading font-semibold text-white">Sister sites</p>
+            <ul className="flex flex-wrap gap-x-5 gap-y-2">
+              {sisterSites.map(site => (
+                <li key={site.url}>
+                  <a href={site.url} target="_blank" rel="noopener" className="inline-flex items-center gap-1.5 hover:text-white">
+                    {site.label}
+                    <Icon name="external" className="h-3.5 w-3.5" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
       <div className="relative border-t border-white/10">
-        <div className="mx-auto flex max-w-site flex-col gap-3 px-4 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
+        <div className="mx-auto flex max-w-site flex-col gap-3 px-4 py-6 text-[13px] text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
           <p>{`© ${year} ${siteName}. All rights reserved.`}</p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {legal.map(link => (

@@ -11,9 +11,9 @@ function rba_customize_register($wp_customize) {
   ));
 
   $images = array(
+    'rba_share_image' => 'Imagen para compartir en redes (OpenGraph, 1200×630)',
     'rba_hero_image' => 'Imagen del hero (consultor/a real)',
     'rba_process_image' => 'Imagen de la sección "How We Work"',
-    'rba_bca_image' => 'Imagen de Business Coaching Academy',
     'rba_team_image' => 'Foto del equipo',
   );
 
@@ -46,6 +46,11 @@ function rba_customize_register($wp_customize) {
     'section' => 'rba_home',
     'type' => 'text',
   ));
+
+  foreach (array('rba_sister_lem_url' => array('Sitio hermano: Laura Elena Martínez (URL)', 'https://lem.828marketingsolutions.com/'), 'rba_sister_apex_url' => array('Sitio hermano: Apex Accounting & Advisory (URL)', 'https://apexaccountinginc.com/')) as $id => $field) {
+    $wp_customize->add_setting($id, array('default' => $field[1], 'sanitize_callback' => 'esc_url_raw'));
+    $wp_customize->add_control($id, array('label' => $field[0], 'section' => 'rba_home', 'type' => 'url'));
+  }
 
   foreach (array('linkedin' => 'LinkedIn', 'facebook' => 'Facebook', 'instagram' => 'Instagram', 'youtube' => 'YouTube') as $key => $label) {
     $wp_customize->add_setting('rba_social_' . $key, array('sanitize_callback' => 'esc_url_raw'));

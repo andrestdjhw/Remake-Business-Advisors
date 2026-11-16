@@ -11,8 +11,6 @@ $image = isset($args['image']) ? (int) $args['image'] : 0;
 $actions = !empty($args['actions']);
 ?>
 <header class="relative isolate overflow-hidden bg-navy-900 text-white">
-  <div class="rba-grid-pattern" aria-hidden="true"></div>
-  <div class="pointer-events-none absolute -right-24 -bottom-40 h-96 w-96 rounded-full border-[2.5rem] border-brand-500/20" data-parallax="-30" aria-hidden="true"></div>
 
   <div class="relative mx-auto grid max-w-site items-center gap-12 px-4 py-14 sm:px-6 lg:px-10 lg:py-20 <?php echo $image ? 'lg:grid-cols-2' : ''; ?>">
     <div class="max-w-3xl">

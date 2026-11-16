@@ -161,7 +161,6 @@ function MegaMenu({ item, active, current, cta, servicesUrl }) {
             })}
 
             <div className="relative col-span-3 isolate flex flex-col justify-between overflow-hidden rounded-2xl bg-navy-900 p-6 text-white">
-              <div className="rba-grid-pattern" aria-hidden="true" />
               <div>
                 <p className="font-heading text-xs font-semibold tracking-[0.25em] text-brand-400 uppercase">Not sure where to start?</p>
                 <p className="mt-3 font-heading text-lg leading-snug font-semibold">

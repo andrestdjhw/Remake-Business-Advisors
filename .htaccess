@@ -1,0 +1,6 @@
+# Segunda capa (Apache/LiteSpeed): si se suben archivos de desarrollo por error, el servidor responde 404.
+# El despliegue correcto es el paquete de `npm run package` (dist/remake_business_advisors.zip), que no los incluye.
+<IfModule mod_alias.c>
+  RedirectMatch 404 /wp-content/themes/[^/]+/(node_modules|src|scripts|docs|dist)(/|$)
+  RedirectMatch 404 /wp-content/themes/[^/]+/(package(-lock)?\.json|\.distignore|\.gitignore|\.git(/.*)?|.*\.md)$
+</IfModule>

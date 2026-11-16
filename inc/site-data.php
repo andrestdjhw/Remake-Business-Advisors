@@ -58,14 +58,6 @@ function rba_services() {
       'icon' => 'briefcase',
       'summary' => 'Training that strengthens leadership, team management, and day-to-day operational performance.',
     ),
-    array(
-      'slug' => 'business-coaching-academy',
-      'group' => 'training',
-      'tagline' => 'A practical training program for entrepreneurs and leaders.',
-      'title' => 'Business Coaching Academy',
-      'icon' => 'graduation',
-      'summary' => 'A practical training program for entrepreneurs and business leaders who want to lead and grow with more structure.',
-    ),
   );
 }
 
@@ -150,6 +142,18 @@ function rba_hero_slide_ids() {
   return $ids;
 }
 
+/*
+ * Sitios hermanos (enlace cruzado en el pie, revisión 11-nov-2026). URLs editables en el Personalizador:
+ * al lanzar, cambiar el de Laura por su dominio final. Nombre de Apex pendiente de confirmar.
+ */
+function rba_sister_sites() {
+  $sites = array(
+    array('label' => 'Laura Elena Martínez', 'url' => get_theme_mod('rba_sister_lem_url', 'https://lem.828marketingsolutions.com/')),
+    array('label' => 'Apex Accounting & Advisory', 'url' => get_theme_mod('rba_sister_apex_url', 'https://apexaccountinginc.com/')),
+  );
+  return array_values(array_filter($sites, function ($s) { return !empty($s['url']); }));
+}
+
 function rba_react_data() {
   $legal = array();
   if (get_privacy_policy_url()) $legal[] = array('label' => 'Privacy Policy', 'url' => get_privacy_policy_url());
@@ -167,5 +171,6 @@ function rba_react_data() {
     'servicesUrl' => home_url('/services/'),
     'socials' => rba_social_links(),
     'legal' => $legal,
+    'sisterSites' => rba_sister_sites(),
   );
 }

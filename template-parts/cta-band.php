@@ -9,7 +9,7 @@ $label = isset($args['label']) ? $args['label'] : 'Book a Consultation';
 $url = isset($args['url']) ? $args['url'] : rba_contact_url();
 ?>
   <section class="px-4 py-20 sm:px-6 lg:px-10 lg:py-24" aria-labelledby="cta-title">
-    <div data-reveal class="mx-auto flex max-w-site flex-col items-start gap-6 rounded-2xl bg-gradient-to-r from-brand-50 via-brand-100 to-brand-50 p-8 ring-1 ring-brand-100 sm:p-10 md:flex-row md:items-center">
+    <div data-reveal class="mx-auto flex max-w-site flex-col items-start gap-6 rounded-2xl bg-cream p-8 ring-1 ring-brand-100 sm:p-10 md:flex-row md:items-center">
       <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white text-brand-500 shadow-sm">
         <?php echo rba_icon('calendar', 'h-7 w-7'); ?>
       </span>

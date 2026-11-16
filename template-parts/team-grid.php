@@ -15,10 +15,10 @@
             'sizes' => '(min-width: 1024px) 208px, 40vw',
             'alt' => $member['name'],
           )); ?>
-          <span class="rba-glass__shine" aria-hidden="true"></span>
         </div>
+        <figcaption class="rba-glass__label" aria-hidden="true"><?php echo esc_html($member['name']); ?></figcaption>
       </figure>
-      <h3 class="mt-5 text-lg font-semibold text-navy-900"><?php echo esc_html($member['name']); ?></h3>
+      <h3 class="mt-7 text-lg font-semibold text-navy-900"><?php echo esc_html($member['name']); ?></h3>
       <p class="mt-1 text-sm text-ink/70"><?php echo esc_html($member['role']); ?></p>
     </li>
   <?php endforeach; ?>

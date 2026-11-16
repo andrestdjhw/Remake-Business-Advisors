@@ -14,7 +14,6 @@ while (have_posts()) :
 
   <main id="main">
     <header class="relative isolate overflow-hidden bg-navy-900 text-white">
-      <div class="rba-grid-pattern" aria-hidden="true"></div>
       <div class="relative mx-auto max-w-site px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
         <?php if (rba_is_legal_page()) : ?>
           <p class="eyebrow flex items-center gap-3 text-brand-400"><span class="h-px w-8 bg-brand-400" aria-hidden="true"></span>Legal</p>

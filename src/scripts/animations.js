@@ -123,7 +123,6 @@ function initHero() {
   const tl = gsap
     .timeline({ defaults: { ease: "expo.out" } })
     .fromTo("[data-hero-img]", { scale: 1.15 }, { scale: 1, duration: 2.4, ease: "power3.out" }, 0)
-    .fromTo("[data-hero-backdrop]", { xPercent: 10, opacity: 0 }, { xPercent: 0, opacity: 0.9, duration: 1.6 }, 0.1)
     .to(words, { yPercent: 0, duration: 1.2, stagger: 0.06 }, 0.15)
     .fromTo("[data-hero-in]", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.12 }, 0.45)
 

@@ -90,60 +90,26 @@
     box-shadow: 0 0 0 0 rgb(0 26 61 / 0);
     transform: translateY(1px);
   }
-  /*
-   * Íconos sociales del footer: mismo tratamiento que .btn-primary (degradado, borde degradado y
-   * sombra), visible en hover. El degradado vive en ::before para poder animar su opacidad.
-   */
+
+  /* Íconos sociales del footer: relleno plano en hover. */
   .rba-social {
-    position: relative;
-    isolation: isolate;
-    border: 2px solid transparent;
-    background: rgb(255 255 255 / 0.1) border-box;
-    transition:
-      box-shadow 0.3s ease,
-      transform 0.3s ease;
-  }
-  .rba-social::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    z-index: -1;
-    border: 2px solid transparent;
-    border-radius: inherit;
-    background:
-      linear-gradient(140.14deg, #cc460b 15.05%, #a8290f 114.99%) padding-box,
-      linear-gradient(142.51deg, #f6833e 8.65%, #8f2207 88.82%) border-box;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  .rba-social svg {
-    transition: filter 0.3s ease;
+    background: rgb(255 255 255 / 0.1);
+    transition: background-color 0.25s ease;
   }
   .rba-social:hover,
   .rba-social:focus-visible {
-    box-shadow: 6px 6px 16px 0 rgb(0 0 0 / 0.35);
-    transform: translateY(-1px);
-  }
-  .rba-social:hover::before,
-  .rba-social:focus-visible::before {
-    opacity: 1;
-  }
-  .rba-social:hover svg,
-  .rba-social:focus-visible svg {
-    filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 0.25));
-  }
-  .rba-social:active {
-    box-shadow: none;
-    transform: translateY(1px);
+    background: var(--color-brand-700);
   }
   .rba-social:focus-visible {
     outline: 2px solid #fff;
     outline-offset: 2px;
   }
 
+  /* Etiqueta sobre los títulos de sección (mínimo 13 px, revisión 11-nov-2026). */
   .eyebrow {
-    @apply font-heading text-xs font-semibold tracking-[0.25em] text-brand-700 uppercase;
+    @apply font-heading text-[13px] font-semibold tracking-[0.2em] text-brand-700 uppercase;
   }
+
   /* Flecha de los botones: pequeño desplazamiento al pasar el mouse. */
   .btn > svg:last-child:not(:first-child) {
     @apply transition-transform duration-300;
@@ -152,97 +118,61 @@
     transform: translateX(3px);
   }
   .rba-placeholder {
-    background:
-      radial-gradient(circle at 75% 25%, var(--color-brand-100), transparent 55%),
-      linear-gradient(135deg, var(--color-brand-50), #fff 60%, var(--color-cream));
+    background: var(--color-cream);
   }
 }
 
-/* ---------- Carrusel de servicios (src/scripts/carousel.js) ----------
-   Scroll horizontal nativo con snap (táctil y trackpad), alineado al contenedor del sitio a la
-   izquierda y "sangrando" hasta el borde derecho de la pantalla. */
-.rba-carousel {
-  --gutter: 1rem;
+/* ---------- Servicios: desplazamiento continuo infinito (marquee) ----------
+   Dos copias idénticas de la lista; la pista se mueve de -50% a 0 (de izquierda a derecha) y al
+   terminar vuelve al inicio sin salto. Se pausa con hover o foco para poder leer y hacer clic.
+   Bordes con desvanecido para que las tarjetas entren y salgan sin verse cortadas.
+   Con movimiento reducido: sin animación, lista con scroll horizontal y sin la copia. */
+.rba-marquee {
   --gap: 1.5rem;
-  --per-view: 1.15;
-  --content: calc(100vw - var(--gutter) * 2);
+  --card: min(82vw, 21rem);
+  --duration: 70s;
+  overflow: hidden;
+  padding-block: 1rem 1.5rem; /* espacio para el "lift" y la sombra del hover */
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
-@media (min-width: 640px) {
-  .rba-carousel {
-    --gutter: 1.5rem;
-    --per-view: 2;
-  }
+.rba-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: rba-marquee var(--duration) linear infinite;
 }
-@media (min-width: 1024px) {
-  .rba-carousel {
-    --gutter: max(2.5rem, calc((100vw - 90rem) / 2 + 2.5rem));
-    --per-view: 3;
-    --content: min(calc(100vw - 5rem), 85rem);
-  }
+.rba-marquee:hover .rba-marquee__track,
+.rba-marquee:focus-within .rba-marquee__track {
+  animation-play-state: paused;
 }
-@media (min-width: 1280px) {
-  .rba-carousel {
-    --per-view: 4;
-  }
-}
-.rba-carousel__track {
+.rba-marquee__list {
   display: flex;
   gap: var(--gap);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--gutter);
-  padding: 1rem var(--gutter) 1.5rem;
-  margin-block: -1rem -1.5rem; /* espacio para la sombra y el "lift" del hover sin recortarlos */
-  scrollbar-width: none;
+  padding-right: var(--gap); /* mismo espacio en la unión entre copias */
 }
-.rba-carousel__track::-webkit-scrollbar {
-  display: none;
-}
-.rba-carousel__track:focus-visible {
-  outline: 2px solid var(--color-brand-700);
-  outline-offset: -2px;
-}
-.rba-carousel__track.is-dragging {
-  cursor: grabbing;
-  scroll-snap-type: none;
-  user-select: none;
-}
-.rba-carousel__item {
+.rba-marquee__item {
   flex: none;
-  width: calc((var(--content) - var(--gap) * (var(--per-view) - 1)) / var(--per-view));
-  scroll-snap-align: start;
+  width: var(--card);
 }
-@media (max-width: 639px) {
-  .rba-carousel__item {
-    width: 82vw;
+@keyframes rba-marquee {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
-.rba-carousel__btn {
-  display: flex;
-  height: 3rem;
-  width: 3rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  border: 2px solid var(--color-navy-900);
-  color: var(--color-navy-900);
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease,
-    opacity 0.25s ease;
-}
-.rba-carousel__btn:hover:not(:disabled) {
-  background: var(--color-navy-900);
-  color: #fff;
-}
-.rba-carousel__btn:focus-visible {
-  outline: 2px solid var(--color-brand-700);
-  outline-offset: 2px;
-}
-.rba-carousel__btn:disabled {
-  cursor: default;
-  opacity: 0.3;
+@media (prefers-reduced-motion: reduce) {
+  .rba-marquee {
+    overflow-x: auto;
+    mask-image: none;
+    padding-inline: 1rem;
+  }
+  .rba-marquee__track {
+    animation: none;
+  }
+  .rba-marquee__list[aria-hidden="true"] {
+    display: none;
+  }
 }
 
 /* ---------- Slideshow del hero (src/scripts/heroSlideshow.js) ----------
@@ -366,56 +296,7 @@
   }
 }
 
-/* ---------- Sección de proceso: patrones de fondo y tarjetas apiladas ---------- */
-.rba-grid-pattern,
-.rba-dots-pattern {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-.rba-grid-pattern {
-  background-image:
-    linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 60% 55% at 85% 20%, #000 20%, transparent 75%);
-}
-.rba-dots-pattern {
-  background-image: radial-gradient(rgb(246 131 62 / 0.3) 1.2px, transparent 1.4px);
-  background-size: 22px 22px;
-  mask-image: radial-gradient(ellipse 40% 35% at 8% 92%, #000 15%, transparent 70%);
-}
-
-/* Palabra tachada que se "dibuja" en el título */
-.rba-strike {
-  position: relative;
-  color: rgb(255 255 255 / 0.45);
-  white-space: nowrap;
-}
-.rba-strike::after {
-  content: "";
-  position: absolute;
-  left: -2%;
-  right: -2%;
-  top: 55%;
-  height: 0.09em;
-  border-radius: 9999px;
-  background: var(--color-brand-400);
-  transform: rotate(-3deg);
-  transform-origin: left center;
-  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.5s;
-}
-.rba-anim .js-split:not(.is-in) .rba-strike::after {
-  transform: rotate(-3deg) scaleX(0);
-  transition: none;
-}
-
-/* Subrayado tipo marcador */
-.rba-marker {
-  background: linear-gradient(transparent 62%, rgb(246 131 62 / 0.35) 62%) no-repeat;
-}
-
+/* ---------- Sección de proceso: tarjetas apiladas ---------- */
 .rba-stack-card {
   position: sticky;
   top: calc(var(--wp-admin--admin-bar--height, 0px) + 6rem + var(--i) * 1.125rem);
@@ -440,15 +321,10 @@
 .rba-stack-card:nth-child(4) {
   background: var(--color-brand-300);
 }
-.rba-stack-card em {
-  font-weight: 600;
-  color: var(--color-brand-800);
-}
 /* Sobre el naranja: texto e itálica más oscuros para mantener contraste AA */
 .rba-stack-card:nth-child(4) p {
   color: var(--color-ink);
 }
-.rba-stack-card:nth-child(4) em,
 .rba-stack-card:nth-child(4) .rba-stack-card__art {
   color: var(--color-navy-900);
 }
@@ -585,8 +461,8 @@
   }
 }
 
-/* ---------- Retratos "glass" (hover estilo menú de canales de Wii) ----------
-   Al pasar el mouse: crece con rebote, brillo vidrioso, halo de luz y un destello que cruza la foto. */
+/* ---------- Retratos del equipo ----------
+   Revisión 11-nov-2026: plano. En hover el retrato se acerca un poco, toma un aro navy y muestra el nombre. */
 .rba-glass {
   position: relative;
   margin: 0;
@@ -596,94 +472,45 @@
   overflow: hidden;
   border-radius: 9999px;
   background: var(--color-cream);
-  box-shadow:
-    0 0 0 4px #fff,
-    0 10px 20px -6px rgb(0 37 86 / 0.25);
+  box-shadow: 0 0 0 4px #fff;
   transition:
-    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.4s ease;
-}
-/* Capa de vidrio: reflejo superior + volumen interior */
-.rba-glass__orb::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: inherit;
-  pointer-events: none;
-  background:
-    radial-gradient(120% 70% at 50% -10%, rgb(255 255 255 / 0.75) 0%, rgb(255 255 255 / 0.2) 38%, transparent 40%),
-    linear-gradient(to top, rgb(0 37 86 / 0.18), transparent 45%);
-  box-shadow:
-    inset 0 2px 6px rgb(255 255 255 / 0.7),
-    inset 0 -10px 18px rgb(0 37 86 / 0.18);
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-/* Destello diagonal que cruza la foto */
-.rba-glass__shine {
-  position: absolute;
-  inset: -20%;
-  z-index: 2;
-  pointer-events: none;
-  background: linear-gradient(115deg, transparent 35%, rgb(255 255 255 / 0.65) 48%, rgb(255 255 255 / 0.15) 54%, transparent 62%);
-  transform: translateX(-110%);
+    transform 0.4s ease,
+    box-shadow 0.3s ease;
 }
 .rba-glass__label {
   position: absolute;
-  bottom: 4%;
+  /* Sobre el borde inferior del círculo: centrada en el aro navy del hover. */
+  bottom: -2%;
   left: 50%;
   z-index: 3;
   max-width: 120%;
   padding: 0.3rem 0.8rem;
-  border: 1px solid rgb(255 255 255 / 0.8);
+  border: 2px solid var(--color-navy-900);
   border-radius: 9999px;
-  background: rgb(255 255 255 / 0.55);
-  backdrop-filter: blur(10px) saturate(160%);
-  -webkit-backdrop-filter: blur(10px) saturate(160%);
-  box-shadow: 0 6px 16px -6px rgb(0 37 86 / 0.35);
+  background: #fff;
   color: var(--color-navy-900);
   font-family: var(--font-heading);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   white-space: nowrap;
   opacity: 0;
-  transform: translate(-50%, 8px) scale(0.92);
+  transform: translate(-50%, calc(50% + 6px));
   transition:
-    opacity 0.3s ease,
-    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity 0.25s ease,
+    transform 0.3s ease;
 }
-
 @media (hover: hover) {
   .rba-glass:hover .rba-glass__orb {
-    transform: scale(1.1);
+    transform: scale(1.04);
     box-shadow:
       0 0 0 4px #fff,
-      0 0 0 7px rgb(246 131 62 / 0.55),
-      0 0 32px 8px rgb(246 131 62 / 0.35),
-      0 18px 30px -8px rgb(0 37 86 / 0.35);
-  }
-  .rba-glass:hover .rba-glass__orb::before {
-    opacity: 1;
-  }
-  .rba-glass:hover .rba-glass__shine {
-    animation: rba-glass-shine 0.9s ease-out;
+      0 0 0 6px var(--color-navy-900);
   }
   .rba-glass:hover .rba-glass__label {
     opacity: 1;
-    transform: translate(-50%, 0) scale(1);
+    transform: translate(-50%, 50%);
   }
 }
-
-@keyframes rba-glass-shine {
-  from {
-    transform: translateX(-110%);
-  }
-  to {
-    transform: translateX(110%);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .rba-glass__orb,
   .rba-glass__label {
@@ -691,9 +518,6 @@
   }
   .rba-glass:hover .rba-glass__orb {
     transform: none;
-  }
-  .rba-glass:hover .rba-glass__shine {
-    animation: none;
   }
 }
 

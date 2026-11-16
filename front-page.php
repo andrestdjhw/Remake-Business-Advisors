@@ -1,7 +1,9 @@
 <?php
 /**
  * Página de inicio.
- * Estructura según brief §05/§6.1: Hero → a quién ayudamos → servicios → proceso → equipo → BCA → CTA.
+ * Estructura: Hero → a quién ayudamos → servicios → situaciones frecuentes → proceso → equipo → idioma y formas de reunirse
+ * → historias de clientes (pendientes de Laura) → apoyo conectado (sitios hermanos) → FAQ → sede → CTA.
+ * Revisión del 11-nov-2026: sin recursos decorativos (cursivas naranjas, degradados, anillos, patrones) y sin BCA.
  */
 
 get_header();
@@ -17,10 +19,10 @@ $highlights = array(
 
 // Proceso sugerido en el brief: pendiente de validación por Remake antes de presentarlo como metodología oficial.
 $process = array(
-  array('icon' => 'message', 'title' => 'Understanding your <em>business</em>', 'text' => 'We start by listening: your goals, your challenges, and how your business runs today.'),
-  array('icon' => 'search', 'title' => 'A clear <em>diagnosis</em>', 'text' => 'We review the key areas of your business to identify gaps and opportunities.'),
-  array('icon' => 'map', 'title' => 'An action <em>roadmap</em>', 'text' => 'We define clear priorities and a realistic plan of next steps.'),
-  array('icon' => 'compass', 'title' => 'Guidance &amp; <em>implementation</em>', 'text' => 'We support you as you put the plan into action and adjust along the way.'),
+  array('icon' => 'message', 'title' => 'Understanding your business', 'text' => 'We start by listening: your goals, your challenges, and how your business runs today.'),
+  array('icon' => 'search', 'title' => 'A clear diagnosis', 'text' => 'We review the key areas of your business to identify gaps and opportunities.'),
+  array('icon' => 'map', 'title' => 'An action roadmap', 'text' => 'We define clear priorities and a realistic plan of next steps.'),
+  array('icon' => 'compass', 'title' => 'Guidance &amp; implementation', 'text' => 'We support you as you put the plan into action and adjust along the way.'),
 );
 ?>
 
@@ -28,13 +30,12 @@ $process = array(
 
   <!-- ===================== HERO ===================== -->
   <section class="relative overflow-hidden bg-cream" aria-labelledby="hero-title">
-    <div class="pointer-events-none absolute -top-40 -right-40 h-[36rem] w-[36rem] rounded-full border-[3rem] border-brand-100/70" data-parallax="30" aria-hidden="true"></div>
 
     <div class="relative mx-auto grid max-w-site items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:px-10 lg:py-24">
       <div class="border-l-4 border-brand-500 pl-6 sm:pl-8" data-hero-bar>
         <h1 id="hero-title" class="js-split text-4xl leading-[1.1] font-bold tracking-tight text-navy-900 sm:text-5xl lg:text-6xl" data-split="hero">
           Your Business,<br>
-          <span class="font-semibold text-brand-500 italic">Reimagined</span><br>
+          Reimagined<br>
           for Success
         </h1>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink/80" data-hero-in>
@@ -46,12 +47,10 @@ $process = array(
             Book a Consultation
             <?php echo rba_icon('arrowRight', 'h-4 w-4'); ?>
           </a>
-          <a href="<?php echo esc_url(home_url('/services/')); ?>" class="btn btn-outline">Explore Our Services</a>
         </div>
       </div>
 
       <div class="relative mx-auto w-full max-w-md lg:max-w-none" data-hero-media>
-        <div class="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-brand-400 to-brand-500 opacity-90 sm:-inset-6" style="clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);" data-hero-backdrop aria-hidden="true"></div>
         <?php $hero_slides = rba_hero_slide_ids(); ?>
         <?php if (count($hero_slides) > 1) : ?>
           <!-- Slideshow del hero (src/scripts/heroSlideshow.js). Imágenes en Personalizar > Remake: Home y redes. -->
@@ -110,48 +109,43 @@ $process = array(
     </ul>
   </section>
 
-  <!-- ===================== SERVICIOS (carrusel; src/scripts/carousel.js) ===================== -->
+  <!-- ===================== SERVICIOS (desplazamiento continuo; estilos .rba-marquee en src/index.css) ===================== -->
   <section class="overflow-hidden py-20 lg:py-28" aria-labelledby="services-title">
-    <div class="mx-auto flex max-w-site flex-col gap-8 px-4 sm:px-6 lg:flex-row lg:items-end lg:justify-between lg:px-10">
+    <div class="mx-auto max-w-site px-4 sm:px-6 lg:px-10">
       <div class="max-w-3xl">
         <p class="eyebrow" data-reveal>Our Services</p>
         <h2 id="services-title" class="js-split mt-3 text-3xl font-bold text-navy-900 sm:text-4xl">Comprehensive Solutions for Entrepreneurs and Business Owners</h2>
         <p class="mt-4 text-lg text-ink/75" data-reveal>From business structure and strategic planning to hands-on advisory and leadership training, we offer the support you need to run a stronger, better-organized business.</p>
       </div>
-      <div class="flex shrink-0 items-center gap-3" data-reveal>
-        <button type="button" class="rba-carousel__btn" data-carousel-prev aria-controls="services-track">
-          <?php echo rba_icon('arrowRight', 'h-5 w-5 rotate-180'); ?>
-          <span class="sr-only">Previous services</span>
-        </button>
-        <button type="button" class="rba-carousel__btn" data-carousel-next aria-controls="services-track">
-          <?php echo rba_icon('arrowRight', 'h-5 w-5'); ?>
-          <span class="sr-only">Next services</span>
-        </button>
+    </div>
+
+    <div class="rba-marquee mt-10" data-reveal>
+      <div class="rba-marquee__track">
+        <?php for ($copy = 0; $copy < 2; $copy++) : ?>
+          <ul class="rba-marquee__list"<?php echo $copy ? ' aria-hidden="true" inert' : ''; ?>>
+            <?php foreach (rba_services() as $service) : ?>
+              <li class="rba-marquee__item">
+                <?php get_template_part('template-parts/service-card', null, array('service' => $service)); ?>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endfor; ?>
       </div>
     </div>
 
-    <div class="rba-carousel mt-12" data-carousel role="region" aria-roledescription="carousel" aria-labelledby="services-title">
-      <ul id="services-track" class="rba-carousel__track" data-carousel-track tabindex="0">
-        <?php $services = rba_services(); ?>
-        <?php foreach ($services as $i => $service) : ?>
-          <li class="rba-carousel__item" data-reveal aria-roledescription="slide" aria-label="<?php echo esc_attr(($i + 1) . ' of ' . count($services)); ?>">
-            <?php get_template_part('template-parts/service-card', null, array('service' => $service)); ?>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-
-      <div class="mx-auto mt-10 max-w-site px-4 sm:px-6 lg:px-10" aria-hidden="true">
-        <div class="h-1 overflow-hidden rounded-full bg-gray-200">
-          <div class="h-full origin-left rounded-full bg-brand-500 transition-transform duration-300" data-carousel-progress></div>
-        </div>
-      </div>
+    <div class="mx-auto mt-8 max-w-site px-4 sm:px-6 lg:px-10" data-reveal>
+      <a href="<?php echo esc_url(home_url('/services/')); ?>" class="btn btn-outline">
+        View All Services
+        <?php echo rba_icon('arrowRight', 'h-4 w-4'); ?>
+      </a>
     </div>
   </section>
 
+  <!-- ===================== SITUACIONES FRECUENTES → SERVICIO ===================== -->
+  <?php get_template_part('template-parts/challenges'); ?>
+
   <!-- ===================== PROCESO (columna fija + tarjetas apiladas) ===================== -->
   <section class="relative isolate bg-navy-900 py-24 text-white lg:py-32" aria-labelledby="process-title">
-    <div class="rba-grid-pattern" aria-hidden="true"></div>
-    <div class="rba-dots-pattern" aria-hidden="true"></div>
 
     <div class="relative mx-auto grid max-w-site gap-14 px-4 sm:px-6 lg:grid-cols-12 lg:px-10">
 
@@ -160,10 +154,10 @@ $process = array(
         <div class="lg:sticky lg:top-[calc(var(--wp-admin--admin-bar--height,0px)_+_7rem)]">
           <p class="eyebrow flex items-center gap-3 text-brand-400" data-reveal><span class="h-px w-8 bg-brand-400" aria-hidden="true"></span>How We Work</p>
           <h2 id="process-title" class="js-split mt-5 text-[clamp(2rem,3.6vw,3.25rem)] leading-[1.05] font-bold">
-            From <span class="rba-strike">guesswork</span> to a <em class="font-semibold text-brand-400">clear path</em> for your business.
+            A clear path for your business.
           </h2>
           <p class="mt-6 max-w-lg text-lg leading-relaxed text-white/70" data-reveal>
-            A practical, personalized process designed to <strong class="rba-marker font-semibold text-white">understand your business, define the right priorities,</strong> and help you move forward with confidence.
+            A practical, personalized process designed to understand your business, define the right priorities, and help you move forward with confidence.
           </p>
 
           <div class="js-img-reveal relative mt-10 hidden aspect-[4/3] overflow-hidden rounded-[1.75rem] lg:block">
@@ -177,7 +171,7 @@ $process = array(
 
       <!-- Tarjetas apiladas -->
       <div class="lg:col-span-7">
-        <p class="text-2xl text-white/80 italic md:text-3xl" data-reveal>Our process, step by step:</p>
+        <p class="text-2xl text-white/80 md:text-3xl" data-reveal>Our process, step by step:</p>
 
         <ol class="mt-10 grid gap-6 pb-4">
           <?php foreach ($process as $i => $step) : ?>
@@ -188,7 +182,7 @@ $process = array(
               </div>
               <div class="mt-8">
                 <h3 class="text-[clamp(1.5rem,2.4vw,2.1rem)] leading-[1.12] font-bold text-navy-900">
-                  <span class="sr-only">Step <?php echo (int) $i + 1; ?>: </span><?php echo wp_kses($step['title'], array('em' => array())); ?>
+                  <span class="sr-only">Step <?php echo (int) $i + 1; ?>: </span><?php echo esc_html(html_entity_decode($step['title'])); ?>
                 </h3>
                 <p class="mt-3 max-w-xl text-base leading-relaxed text-ink/75"><?php echo esc_html($step['text']); ?></p>
               </div>
@@ -224,7 +218,6 @@ $process = array(
                     'loading' => 'lazy',
                     'sizes' => '(min-width: 1024px) 150px, 30vw',
                   )); ?>
-                  <span class="rba-glass__shine" aria-hidden="true"></span>
                 </div>
                 <figcaption class="rba-glass__label" aria-hidden="true"><?php echo esc_html(get_the_title($photo_id)); ?></figcaption>
               </figure>
@@ -236,32 +229,10 @@ $process = array(
       <?php endif; ?>
     </div>
   </section>
-
-  <!-- ===================== BUSINESS COACHING ACADEMY ===================== -->
-  <section class="relative overflow-hidden bg-navy-900 text-white" aria-labelledby="bca-title">
-    <div class="pointer-events-none absolute -right-32 -bottom-48 h-96 w-96 rounded-full border-[2.5rem] border-brand-500/25" data-parallax="-40" aria-hidden="true"></div>
-
-    <div class="relative mx-auto grid max-w-site items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-10 lg:py-24">
-      <div class="js-img-reveal overflow-hidden rounded-2xl shadow-2xl">
-        <?php echo rba_image('rba_bca_image', 'aspect-[4/3] w-full object-cover', 'large', array('loading' => 'lazy', 'sizes' => '(min-width: 1024px) 50vw, 100vw')); ?>
-      </div>
-
-      <div>
-        <p class="font-heading text-xs font-semibold tracking-[0.25em] text-brand-400 uppercase" data-reveal>Featured Program</p>
-        <h2 id="bca-title" class="js-split mt-3 text-3xl font-bold sm:text-4xl">Business Coaching Academy</h2>
-        <p class="mt-4 text-lg leading-relaxed text-white/80" data-reveal>A comprehensive training program for entrepreneurs and business leaders who want the knowledge, tools, and support to lead, manage, and grow their companies with confidence.</p>
-        <ul class="mt-6 space-y-3 text-white/85" data-reveal>
-          <li class="flex gap-3"><?php echo rba_icon('check', 'mt-0.5 h-5 w-5 shrink-0 text-brand-400'); ?>Designed for business owners and leaders who want more structure</li>
-          <li class="flex gap-3"><?php echo rba_icon('check', 'mt-0.5 h-5 w-5 shrink-0 text-brand-400'); ?>A structured, seven-module learning path</li>
-          <li class="flex gap-3"><?php echo rba_icon('check', 'mt-0.5 h-5 w-5 shrink-0 text-brand-400'); ?>Practical tools you can apply in your business</li>
-        </ul>
-        <a href="<?php echo esc_url(rba_service_url('business-coaching-academy')); ?>" class="btn btn-primary mt-8" data-reveal>
-          Explore the Academy
-          <?php echo rba_icon('arrowRight', 'h-4 w-4'); ?>
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- ===================== IDIOMA / HISTORIAS / APOYO CONECTADO (template-parts) ===================== -->
+  <?php get_template_part('template-parts/language-band'); ?>
+  <?php get_template_part('template-parts/client-stories'); ?>
+  <?php get_template_part('template-parts/connected-support'); ?>
 
   <!-- ===================== PREGUNTAS FRECUENTES / SEDE / CTA (template-parts) ===================== -->
   <?php get_template_part('template-parts/faq'); ?>

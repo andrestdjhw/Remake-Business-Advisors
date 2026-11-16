@@ -1,0 +1,14 @@
+# Archivos que NO se suben al servidor (los excluye scripts/package-theme.sh).
+node_modules
+src
+scripts
+docs
+dist
+package.json
+package-lock.json
+.distignore
+.gitignore
+.git
+.DS_Store
+build/*.map
+*.md

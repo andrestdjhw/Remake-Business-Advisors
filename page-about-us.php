@@ -32,7 +32,7 @@ $steps = array(
       </div>
       <div class="space-y-5 text-lg leading-relaxed text-ink/80 lg:col-span-7">
         <p data-reveal>Remake Business Advisors supports Hispanic entrepreneurs and business owners with practical guidance for the decisions that shape their companies. We help them understand how their business operates today, build the structure they need, and move forward with clarity.</p>
-        <p data-reveal>Our work combines one-on-one consulting, including business and financial diagnosis, strategic planning, corporate entity formation, and personalized advisory sessions, with training programs such as the Business Coaching Academy and our course for managers and supervisors.</p>
+        <p data-reveal>Our work combines one-on-one consulting, including business and financial diagnosis, strategic planning, corporate entity formation, and personalized advisory sessions, with training such as our course for managers and supervisors.</p>
         <p data-reveal>We serve our clients in Spanish, from our office in Irvine, California, and through phone and Zoom sessions.</p>
       </div>
     </div>
@@ -42,7 +42,6 @@ $steps = array(
   <section class="pb-20 lg:pb-28" aria-label="Mission and vision">
     <div class="mx-auto grid max-w-site gap-6 px-4 sm:px-6 md:grid-cols-2 lg:px-10">
       <article class="relative isolate overflow-hidden rounded-[1.75rem] bg-navy-900 p-8 text-white sm:p-10" data-reveal>
-        <div class="rba-grid-pattern" aria-hidden="true"></div>
         <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-brand-400"><?php echo rba_icon('target', 'h-6 w-6'); ?></span>
         <h2 class="mt-6 text-2xl font-bold">Our Mission</h2>
         <p class="mt-3 text-lg leading-relaxed text-white/80">To empower Hispanic entrepreneurs with the tools, strategies, and guidance needed to grow their businesses and achieve lasting success in competitive markets.</p>
@@ -110,7 +109,6 @@ $steps = array(
             <figure class="rba-glass">
               <div class="rba-glass__orb">
                 <?php echo wp_get_attachment_image($member['photo'], 'medium', false, array('class' => 'aspect-square w-full object-cover', 'loading' => 'lazy', 'sizes' => '140px', 'alt' => $member['name'])); ?>
-                <span class="rba-glass__shine" aria-hidden="true"></span>
               </div>
               <figcaption class="rba-glass__label" aria-hidden="true"><?php echo esc_html($member['name']); ?></figcaption>
             </figure>
@@ -120,6 +118,7 @@ $steps = array(
     </div>
   </section>
 
+  <?php get_template_part('template-parts/connected-support', null, array('bg' => 'bg-white')); ?>
   <?php get_template_part('template-parts/cta-band'); ?>
 </main>
 

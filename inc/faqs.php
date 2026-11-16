@@ -24,6 +24,9 @@ function rba_company() {
     'email' => 'lauraelena@remakeadvisors.com',
     // Ficha de Google Maps enlazada en el footer del sitio actual.
     'maps_url' => 'https://maps.app.goo.gl/r5AvkdkqR1giwVFb6',
+    // Coordenadas del pin de esa ficha (Google Maps, consultado 13-nov-2026).
+    'lat' => 33.6589497,
+    'lng' => -117.7532345,
   );
 }
 
@@ -44,7 +47,7 @@ function rba_home_faqs() {
   return array(
     array(
       'q' => 'What services does Remake Business Advisors offer?',
-      'a' => 'We offer seven services: Business Diagnosis, Personalized Advisory Sessions, Formation of Corporate Entities, Strategic Planning, Financial Diagnosis, the Course for Managers and Supervisors, and the Business Coaching Academy, our training program for entrepreneurs.',
+      'a' => 'We offer six services: Business Diagnosis, Personalized Advisory Sessions, Formation of Corporate Entities, Strategic Planning, Financial Diagnosis, and a Course for Managers and Supervisors.',
     ),
     array(
       'q' => 'Who do you work with?',
@@ -61,10 +64,6 @@ function rba_home_faqs() {
     array(
       'q' => 'How can I get started?',
       'a' => 'Book an initial consultation by phone, Zoom, or in person. In that first conversation we get to know your business, your goals, and your challenges, and recommend the service that best fits your situation.',
-    ),
-    array(
-      'q' => 'What is the Business Coaching Academy and who is it for?',
-      'a' => 'The Business Coaching Academy is a structured training program for entrepreneurs and business leaders who want to learn how to organize, manage, and grow their company. Visit the Academy page for the current program details and next steps.',
     ),
     array(
       'q' => 'What happens during a Business Diagnosis?',

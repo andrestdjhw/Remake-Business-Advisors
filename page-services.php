@@ -26,7 +26,7 @@ $groups = array(
     <section class="<?php echo $key === 'training' ? 'bg-cream' : ''; ?> py-20 lg:py-24" aria-labelledby="group-<?php echo esc_attr($key); ?>">
       <div class="mx-auto max-w-site px-4 sm:px-6 lg:px-10">
         <div class="max-w-3xl">
-          <p class="eyebrow" data-reveal><?php echo esc_html(count($items) . ' ' . ($key === 'training' ? 'programs' : 'services')); ?></p>
+          <p class="eyebrow" data-reveal><?php echo esc_html(count($items) . ' ' . ($key === 'training' ? _n('program', 'programs', count($items)) : _n('service', 'services', count($items)))); ?></p>
           <h2 id="group-<?php echo esc_attr($key); ?>" class="js-split mt-3 text-3xl font-bold text-navy-900 sm:text-4xl"><?php echo esc_html($group['title']); ?></h2>
           <p class="mt-4 text-lg text-ink/75" data-reveal><?php echo esc_html($group['intro']); ?></p>
         </div>
@@ -43,7 +43,6 @@ $groups = array(
   <section class="py-20 lg:py-24" aria-labelledby="start-title">
     <div class="mx-auto max-w-site px-4 sm:px-6 lg:px-10">
       <div class="relative isolate grid items-center gap-8 overflow-hidden rounded-[1.75rem] bg-navy-900 p-8 text-white sm:p-12 lg:grid-cols-[1.4fr_1fr]" data-reveal>
-        <div class="rba-grid-pattern" aria-hidden="true"></div>
         <div>
           <p class="font-heading text-xs font-semibold tracking-[0.25em] text-brand-400 uppercase">Not sure where to start?</p>
           <h2 id="start-title" class="mt-3 text-3xl font-bold">Start with a clear picture of your business.</h2>

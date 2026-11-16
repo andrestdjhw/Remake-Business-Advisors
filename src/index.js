@@ -5,7 +5,6 @@ import ContactForm from "./components/ContactForm"
 import CookieConsent from "./components/CookieConsent"
 import initAnimations from "./scripts/animations"
 import initHeroSlideshows from "./scripts/heroSlideshow"
-import initCarousels from "./scripts/carousel"
 
 // Datos del sitio inyectados desde PHP (inc/site-data.php → rba_react_data()).
 const data = window.rbaData || {}
@@ -37,4 +36,3 @@ if (contactEl) {
 
 initAnimations()
 initHeroSlideshows()
-initCarousels()
